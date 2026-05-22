@@ -317,6 +317,7 @@ function submitQuiz() {
 
   const pct = Math.round((score / questions.length) * 100);
   const passed = score >= PASS;
+  sessionStorage.setItem('kp_s1', JSON.stringify({ score, total: questions.length, pct, passed }));
   const banner = document.getElementById('scoreBanner');
   banner.className = 'score-banner ' + (passed ? 'pass' : 'fail');
   banner.style.display = 'block';

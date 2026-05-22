@@ -276,6 +276,34 @@ function submitQuiz() {
   document.querySelector('.submit-note').style.display = 'none';
   banner.scrollIntoView({behavior:'smooth', block:'center'});
   window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
+
+  // --- Formspree submission ---
+  try {
+    const trainee = JSON.parse(sessionStorage.getItem('kp_trainee') || '{}');
+    const s1 = JSON.parse(sessionStorage.getItem('kp_s1') || '{}');
+    const s2 = JSON.parse(sessionStorage.getItem('kp_s2') || '{}');
+    const s3Score = score;
+    const s3Total = questions.length;
+    const totalScore = (s1.score || 0) + (s2.score || 0) + s3Score;
+    const totalPossible = (s1.total || 20) + (s2.total || 20) + s3Total;
+
+    fetch('https://formspree.io/f/mkoebnen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name:        trainee.name  || '—',
+        email:       trainee.email || '—',
+        role:        trainee.role  || '—',
+        cohort:      trainee.cohort || '—',
+        assessment:  'Week 2 Assessment — Day 10',
+        section_1_ghl:       `${s1.score || 0}/${s1.total || 20} (${s1.pct || 0}%) — ${s1.passed ? 'PASSED' : 'NOT PASSED'}`,
+        section_2_ai_meeting:`${s2.score || 0}/${s2.total || 20} (${s2.pct || 0}%) — ${s2.passed ? 'PASSED' : 'NOT PASSED'}`,
+        section_3_situational:`${s3Score}/${s3Total}`,
+        total_score: `${totalScore}/${totalPossible}`,
+        submitted_at: new Date().toISOString()
+      })
+    });
+  } catch(e) { /* fail silently — don't block the UX */ }
 }
 
 updateSubmitState();
