@@ -87,7 +87,7 @@ footer strong{color:var(--muted)}
 <div class="page-header">
   <div class="eyebrow">Section 2 of 3 · AI Tools Module</div>
   <div class="page-title">AI Meeting Notes + Glossary</div>
-  <div class="page-sub">20 questions &nbsp;·&nbsp; Pass mark 80% (16/20) &nbsp;·&nbsp; Covers Days 7–9</div>
+  <div class="page-sub">10 questions &nbsp;·&nbsp; Pass mark 80% (8/10) &nbsp;·&nbsp; Covers Days 7–9</div>
 </div>
 
 <div class="score-banner" id="scoreBanner">
@@ -108,10 +108,11 @@ footer strong{color:var(--muted)}
 
 <div class="submit-wrap">
   <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit Assessment →</button>
-  <div class="submit-note">Answer all 20 questions before submitting.</div>
+  <div class="submit-note">Answer all 10 questions before submitting.</div>
 </div>
 <div class="back-wrap">
   <a id="backLink" href="index.html" class="back-link" style="display:none">← Back to Assessment Hub</a>
+  <a id="nextLink" href="section-3-situational.html" class="back-link" style="display:none;margin-left:12px;color:var(--accent);border-color:var(--accent)">Section 3: Situational →</a>
 </div>
 
 <footer>
@@ -119,32 +120,22 @@ footer strong{color:var(--muted)}
 </footer>
 
 <script>
-const PASS = 16;
+const PASS = 8;
 const letters = ['A','B','C','D'];
 
 const questions = [
-  // ── Part A: AI Meeting Tools ──
+  // ── Part A: AI Meeting Tools (5 questions) ──
   {part:'A',q:"Which AI meeting tool is the KeyPlayers recommended tool?",opts:["Otter","Fireflies","Supernormal","Fathom"],ans:2,exp:"Supernormal is the KP recommendation because of its clean Google Meet integration and automatic summary and action item generation — matching the tools most KP VAs use daily."},
-  {part:'A',q:"What makes Supernormal the top recommendation for KP VAs?",opts:["It's free with unlimited recordings","It has the best Zoom integration","It integrates cleanly with Google Meet and produces automatic summaries","It can translate meetings into other languages"],ans:2,exp:"Most KP VAs operate in Google Meet environments. Supernormal's strength is its tight integration and quality of automated post-meeting summaries and action items."},
   {part:'A',q:"Which tool is best for real-time transcription during a live meeting you're attending?",opts:["Supernormal","Fathom","Fireflies","Otter"],ans:3,exp:"Otter is purpose-built for real-time transcription — showing the transcript live as people speak. It's the right tool when you need to capture notes in the moment, not after the fact."},
-  {part:'A',q:"A client has 50+ recorded meetings and needs to find a specific conversation from 3 months ago. Which tool fits best?",opts:["Supernormal","Otter","Fireflies","Fathom"],ans:2,exp:"Fireflies is built for searching across a large library of past recordings. Its search functionality lets you find specific words, topics, or moments across dozens of meetings."},
   {part:'A',q:"What is Rule #1 before recording any meeting using an AI note tool?",opts:["Test the tool beforehand","Always get consent from all participants","Inform only the host of the meeting","Send the transcript to the client immediately after"],ans:1,exp:"Consent is non-negotiable. In most jurisdictions, recording without informing all participants is illegal — and always a trust violation regardless of legality."},
-  {part:'A',q:"Recording a meeting without informing participants is:",opts:["Acceptable if the meeting is internal only","Only an issue for meetings over 10 people","Potentially illegal and always a professional trust violation","Fine as long as the recording is deleted afterward"],ans:2,exp:"Recording without consent can be illegal in most places and is always a trust violation. The issue is the act of recording without disclosure — not what happens to the file afterward."},
   {part:'A',q:"What is the best post-meeting workflow using AI tools?",opts:["Manually summarize the meeting from memory","Let Supernormal capture the meeting, then use Claude to extract action items and draft follow-ups","Ask the client to send you their notes","Record manually and transcribe it yourself afterward"],ans:1,exp:"The trained KP workflow: Supernormal captures and transcribes → Claude processes the transcript for structured output → VA reviews and delivers. This is the Day 8 Meeting AI + Claude Combo."},
-  {part:'A',q:"What does Fathom specialize in compared to Supernormal?",opts:["Real-time captions during meetings","Cross-platform browser support","Sales-heavy roles where action item extraction is the priority","Video translation into other languages"],ans:2,exp:"Fathom is strongest for sales environments. Its action item extraction and Zoom integration are particularly strong — ideal for client-facing roles."},
   {part:'A',q:"What does an AI meeting tool automatically produce after a meeting ends?",opts:["A Canva presentation of key points","A transcript, summary, and list of action items","A GHL contact note","An invoice for the client"],ans:1,exp:"After the meeting, tools like Supernormal automatically generate: a full transcript, a structured summary, and a list of action items — without the VA needing to take a single note."},
-  // ── Part B: AI Glossary ──
+  // ── Part B: AI Glossary (5 questions) ──
   {part:'B',q:"What is a 'token' in AI, and why does it matter?",opts:["A type of API key used to log in to an AI tool","The basic unit of text the AI reads and generates — roughly ¾ of a word — which affects context limits and API costs","A security verification step before the AI generates a response","A special formatting code used inside prompts"],ans:1,exp:"Tokens are the chunks the AI actually processes — not words, not characters, but something in between. Knowing this explains why long conversations hit limits and why some AI API plans charge by usage."},
   {part:'B',q:"What does it mean to 'iterate' on a prompt?",opts:["Copying the same prompt into multiple AI tools to compare results","Sending the exact same prompt multiple times until you get a different answer","Refining and adjusting your prompt based on the output you received","Translating your prompt into a different language for better results"],ans:2,exp:"Iteration is the core prompting skill — reviewing what the AI gave you, identifying what's off, and adjusting the prompt to get a better result. One good prompt is rarely enough; great output usually takes 2–3 rounds."},
-  {part:'B',q:"What is the difference between 'input' and 'output' in AI?",opts:["Input is the AI's response; output is what you type","Input is what you send to the AI; output is what the AI sends back","They mean the same thing in most AI tools","Input is for text only; output is for images only"],ans:1,exp:"Input = what you send (prompts, documents, images). Output = what the AI generates in response. This distinction matters when understanding how AI tools process information."},
   {part:'B',q:"What does 'training cutoff' mean?",opts:["The maximum length of a prompt the AI can accept","The date when the AI stopped learning new information","When an AI subscription plan expires","The point where the AI stops responding mid-conversation"],ans:1,exp:"The training cutoff is the date after which the AI has no knowledge. If you ask Claude or ChatGPT about post-cutoff events, they may hallucinate or admit they don't know."},
-  {part:'B',q:"What is 'prompt chaining'?",opts:["Saving all your prompts in a shared document for the team to reuse","Linking multiple AI tools together so they communicate automatically","Breaking a complex task into a sequence of prompts where each output feeds into the next","Repeating the same prompt across different AI tools to verify accuracy"],ans:2,exp:"Prompt chaining is how you handle tasks too complex for one prompt. Instead of overwhelming the AI in a single message, you guide it through stages — research first, then structure, then write, then refine. The output of each step becomes input for the next."},
   {part:'B',q:"What is a 'multimodal' AI model?",opts:["An AI that can speak and respond in multiple languages","An AI that can run in multiple browser tabs at the same time","An AI that can process and work with more than one type of data — such as both text and images","An AI model trained on data from multiple different companies"],ans:2,exp:"Multimodal means the model can handle different types of inputs — not just text, but images, PDFs, or audio. Claude and GPT-4o are multimodal. This is why you can paste a screenshot into Claude and ask it to analyze what it sees."},
-  {part:'B',q:"What does 'temperature' control in an AI model?",opts:["How fast the AI responds to prompts","The length of the AI's output","How creative or predictable the AI's responses are","Whether the AI searches the internet for answers"],ans:2,exp:"Low temperature = more predictable, consistent responses. High temperature = more creative, varied. Most chat tools handle this automatically, but knowing the concept helps explain output variation."},
-  {part:'B',q:"What is 'structured output' in AI — and when would a VA use it?",opts:["Output that has been reviewed and approved by a human before delivery","Output the AI returns in a specific format you requested — like a table, numbered list, or a template","A type of AI response only available on paid plans","Output generated using a special formatting code at the start of a prompt"],ans:1,exp:"Structured output is when you tell the AI how to format its response, not just what to say. 'Return this as a table with columns: Task, Owner, Deadline' is structured prompting. VAs use this constantly when extracting meeting notes, building trackers, or drafting SOPs."},
-  {part:'B',q:"What is 'chain of thought' prompting?",opts:["Connecting multiple AI tools together in a workflow","Asking the AI to think step by step before giving its final answer","Breaking a long task into a numbered list for the AI to follow","Giving the AI context from previous conversations"],ans:1,exp:"Chain of thought prompting forces the AI to reason before concluding. Asking 'Think through this step by step' produces smarter, more accurate outputs — especially for complex decisions."},
-  {part:'B',q:"What is an 'AI agent'?",opts:["A human VA who specialises in AI tools and automation","A chatbot that answers customer service questions on a website","An AI system that takes a sequence of autonomous actions — like browsing, writing files, or sending messages — to complete a multi-step task","A plugin that connects two AI tools together"],ans:2,exp:"An AI agent goes beyond answering a question — it takes action. Instead of you running each step, the agent plans and executes a sequence: search → read → summarise → deliver. Tools like Claude in Chrome or Cowork are examples of agent-style workflows."},
-  {part:'B',q:"What does RAG stand for, and why is it relevant to VA work?",opts:["Rapid AI Generation — a technique for getting faster responses from Claude","Retrieval-Augmented Generation — the AI pulls from a specific knowledge base or uploaded documents before generating its response, making answers more accurate and contextually relevant","Role-Assigned Generation — another name for role prompting","Refined AI Guidance — the process of editing a prompt after you receive output"],ans:1,exp:"RAG is how AI tools like Claude Projects 'know' your specific context. Instead of relying purely on training data, the AI retrieves relevant content from files you've uploaded — SOP docs, client briefs, meeting notes — before generating. This is why uploading documents to a Claude Project produces much more accurate, tailored output."}
+  {part:'B',q:"What is an 'AI agent'?",opts:["A human VA who specialises in AI tools and automation","A chatbot that answers customer service questions on a website","An AI system that takes a sequence of autonomous actions — like browsing, writing files, or sending messages — to complete a multi-step task","A plugin that connects two AI tools together"],ans:2,exp:"An AI agent goes beyond answering a question — it takes action. Instead of you running each step, the agent plans and executes a sequence: search → read → summarise → deliver. Tools like Claude in Chrome or Cowork are examples of agent-style workflows."}
 ];
 
 const qList = document.getElementById('qList');
@@ -226,15 +217,16 @@ function submitQuiz() {
   const banner = document.getElementById('scoreBanner');
   banner.className = 'score-banner ' + (passed ? 'pass' : 'fail');
   banner.style.display = 'block';
-  document.getElementById('scoreNum').textContent = `${score}/20 — ${pct}%`;
+  document.getElementById('scoreNum').textContent = `${score}/${questions.length} — ${pct}%`;
   document.getElementById('scoreLabel').textContent = passed ? '✓ PASSED' : '✗ NOT PASSED';
   document.getElementById('scoreMsg').textContent = passed
     ? 'Great work. You passed Section 2. Scroll down to review your answers, then move to Section 3.'
-    : `You need 16/20 to pass. You scored ${score}/20. Review the material and re-attempt.`;
+    : `You need ${PASS}/${questions.length} to pass. You scored ${score}/${questions.length}. Review the material and re-attempt.`;
 
   document.getElementById('submitBtn').style.display = 'none';
   document.querySelector('.submit-note').style.display = 'none';
   document.getElementById('backLink').style.display = 'inline-block';
+  document.getElementById('nextLink').style.display = 'inline-block';
   banner.scrollIntoView({behavior:'smooth', block:'center'});
 }
 

@@ -162,6 +162,7 @@ footer strong{color:var(--muted)}
 </div>
 <div class="back-wrap">
   <a id="backLink" href="index.html" class="back-link" style="display:none">← Back to Assessment Hub</a>
+  <a id="nextLink" href="section-2-ai-meeting.html" class="back-link" style="display:none;margin-left:12px;color:var(--accent);border-color:var(--accent)">Section 2: AI Meeting Tools →</a>
 </div>
 
 
@@ -321,15 +322,16 @@ function submitQuiz() {
   const banner = document.getElementById('scoreBanner');
   banner.className = 'score-banner ' + (passed ? 'pass' : 'fail');
   banner.style.display = 'block';
-  document.getElementById('scoreNum').textContent = `${score}/20 — ${pct}%`;
+  document.getElementById('scoreNum').textContent = `${score}/${questions.length} — ${pct}%`;
   document.getElementById('scoreLabel').textContent = passed ? '✓ PASSED' : '✗ NOT PASSED';
   document.getElementById('scoreMsg').textContent = passed
     ? 'Great work. You passed Section 1. Scroll down to review your answers, then move to Section 2.'
-    : `You need 16/20 to pass. You scored ${score}/20. Review the material and re-attempt.`;
+    : `You need ${PASS}/${questions.length} to pass. You scored ${score}/${questions.length}. Review the material and re-attempt.`;
 
   document.getElementById('submitBtn').style.display = 'none';
   document.querySelector('.submit-note').style.display = 'none';
   document.getElementById('backLink').style.display = 'inline-block';
+  document.getElementById('nextLink').style.display = 'inline-block';
   banner.scrollIntoView({behavior:'smooth', block:'center'});
 }
 

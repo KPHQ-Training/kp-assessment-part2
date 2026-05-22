@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KeyPlayers HQ · Section 3: Situational Prompting</title>
+<title>KeyPlayers HQ · Section 3: GHL Workflow Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -11,12 +11,12 @@
 :root{
   --bg:#061812;--surface:#0a2016;--card:#0f2a1c;--border:#1a4230;
   --accent:#3de8a0;--accent-glow:rgba(61,232,160,0.12);
-  --text:#f0f0f0;--muted:#5a8070;--green:#22c55e;--red:#ef4444;
+  --text:#f0f0f0;--muted:#5a8070;--green:#22c55e;--red:#ef4444;--gold:#f5c518;
 }
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 80px}
+
 nav{width:100%;background:rgba(6,24,18,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px}
 .nav-left{display:flex;align-items:center;gap:10px}
-.rook{width:30px;height:30px;flex-shrink:0}
 .wordmark{font-weight:800;font-size:14px;letter-spacing:-0.3px;color:#fff}
 .wordmark span{color:var(--accent)}
 .nav-badge{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:99px}
@@ -28,12 +28,11 @@ nav{width:100%;background:rgba(6,24,18,0.92);border-bottom:1px solid var(--borde
 .page-title{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:6px}
 .page-sub{font-size:13px;color:var(--muted);line-height:1.6}
 
-/* Intro callout */
 .intro-callout{width:100%;max-width:720px;padding:0 16px 8px}
 .intro-callout-inner{background:rgba(61,232,160,0.06);border:1px solid rgba(61,232,160,0.2);border-radius:12px;padding:16px 20px;font-size:13px;color:#a0c8b0;line-height:1.65}
 .intro-callout-inner strong{color:var(--accent);display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
 
-.score-banner{display:none;width:100%;max-width:720px;margin:0 16px 24px;padding:22px 24px;border-radius:14px;text-align:center}
+.score-banner{display:none;width:100%;max-width:720px;margin:16px 16px 24px;padding:22px 24px;border-radius:14px;text-align:center}
 .score-banner.perfect{background:#0c2318;border:1px solid rgba(34,197,94,0.4)}
 .score-banner.good{background:#1a2a10;border:1px solid rgba(61,232,160,0.3)}
 .score-banner.review{background:#1e0f0f;border:1px solid rgba(239,68,68,0.3)}
@@ -43,45 +42,54 @@ nav{width:100%;background:rgba(6,24,18,0.92);border-bottom:1px solid var(--borde
 .score-banner.review .score-big{color:var(--red)}
 .score-label{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;color:var(--muted)}
 .score-msg{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.6;max-width:480px;margin-left:auto;margin-right:auto}
+.complete-badge{display:inline-block;margin-top:14px;background:rgba(61,232,160,0.1);border:1px solid rgba(61,232,160,0.3);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:0.5px}
 
-.q-list{width:100%;max-width:720px;padding:16px 16px 0;display:flex;flex-direction:column;gap:20px}
-
-/* Scenario card — bigger, more prominent */
-.q-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:0;overflow:hidden;transition:border-color 0.2s}
-.q-card.answered-correct{border-color:rgba(34,197,94,0.4)}
-.q-card.answered-wrong{border-color:rgba(239,68,68,0.3)}
-
+/* ── Scenario card ── */
+.scenario-wrap{width:100%;max-width:720px;padding:16px 16px 0}
+.scenario-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
 .scenario-header{background:rgba(61,232,160,0.06);border-bottom:1px solid var(--border);padding:14px 22px;display:flex;align-items:center;gap:10px}
-.scenario-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
 .scenario-num{width:26px;height:26px;border-radius:50%;background:rgba(61,232,160,0.15);border:1px solid rgba(61,232,160,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0}
+.scenario-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.scenario-body{padding:20px 22px}
 
-.scenario-body{padding:22px}
-
-/* Scenario context box */
 .context-box{background:rgba(0,0,0,0.25);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#a0c8b0;line-height:1.7}
 .context-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
 
-.q-text{font-size:15px;font-weight:700;color:#fff;line-height:1.65;margin-bottom:18px;letter-spacing:-0.1px}
+.task-label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
 
-.options{display:flex;flex-direction:column;gap:10px}
-.option{background:#0a1e14;border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.15s,background 0.15s;font-size:13.5px;color:#c0d8c8;text-align:left;width:100%;font-family:'Inter',sans-serif;line-height:1.55}
-.option:hover:not(.locked){border-color:var(--accent);background:var(--accent-glow)}
-.option.selected{border-color:var(--accent);background:var(--accent-glow)}
-.option.correct{border-color:var(--green);background:#0c2318;color:#fff}
-.option.wrong{border-color:var(--red);background:#1e0f0f;color:#fff}
-.option.locked{cursor:default}
-.opt-letter{font-weight:700;font-size:12px;color:var(--accent);min-width:18px;flex-shrink:0;margin-top:2px;letter-spacing:0.5px}
-.option.correct .opt-letter{color:var(--green)}
-.option.wrong .opt-letter{color:var(--red)}
+/* ── Sequence slots ── */
+.seq-slots{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.seq-slot{display:flex;align-items:center;gap:12px;background:#0a1e14;border:1.5px dashed var(--border);border-radius:10px;padding:12px 14px;min-height:52px;transition:border-color 0.15s}
+.seq-slot.filled{border-style:solid;border-color:var(--border);background:#0c2018}
+.seq-slot.correct{border-color:rgba(34,197,94,0.5);background:#0c2318}
+.seq-slot.wrong{border-color:rgba(239,68,68,0.4);background:#1e0f0f}
+.slot-num{font-size:11px;font-weight:800;color:var(--accent);min-width:20px;text-align:center;flex-shrink:0}
+.seq-slot.correct .slot-num{color:var(--green)}
+.seq-slot.wrong .slot-num{color:var(--red)}
+.slot-text{font-size:13px;color:#c0d8c8;flex:1;line-height:1.45}
+.seq-slot.correct .slot-text{color:#86efac}
+.seq-slot.wrong .slot-text{color:#fca5a5;text-decoration:line-through;opacity:0.7}
+.slot-placeholder{font-size:12px;color:var(--muted);flex:1;font-style:italic}
+.slot-remove{background:none;border:1px solid var(--border);color:var(--muted);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:11px;flex-shrink:0;transition:border-color 0.15s,color 0.15s;display:flex;align-items:center;justify-content:center}
+.slot-remove:hover{border-color:var(--red);color:var(--red)}
+.slot-feedback{font-size:11px;margin-top:6px;line-height:1.5;padding:8px 10px;border-radius:7px;flex-basis:100%}
+.slot-feedback.fb-correct{background:rgba(34,197,94,0.08);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.slot-feedback.fb-wrong{background:rgba(239,68,68,0.08);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
 
-.q-feedback{display:none;margin-top:14px;padding:14px 16px;border-radius:10px;font-size:13.5px;line-height:1.7}
-.q-feedback.show-correct{display:block;background:#0c2318;border:1px solid rgba(34,197,94,0.2);color:#86efac}
-.q-feedback.show-wrong{display:block;background:#1e0f0f;border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
-.fb-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+/* ── Step pool ── */
+.pool-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.pool-steps{display:flex;flex-direction:column;gap:8px}
+.pool-step{background:#0a1e14;border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;text-align:left;font-size:13px;color:#c0d8c8;font-family:'Inter',sans-serif;line-height:1.45;transition:border-color 0.15s,background 0.15s,transform 0.1s}
+.pool-step:hover{border-color:var(--accent);background:var(--accent-glow);transform:translateX(3px)}
+.pool-done{font-size:12px;font-weight:600;color:var(--accent);text-align:center;padding:10px;background:rgba(61,232,160,0.06);border:1px solid rgba(61,232,160,0.2);border-radius:8px}
 
-/* Complete badge */
-.complete-badge{display:inline-block;margin-top:14px;background:rgba(61,232,160,0.1);border:1px solid rgba(61,232,160,0.3);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:0.5px}
+/* ── Step type badges ── */
+.step-type{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:99px;margin-right:8px;flex-shrink:0}
+.type-trigger{background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)}
+.type-wait{background:rgba(245,197,24,0.12);color:#fde68a;border:1px solid rgba(245,197,24,0.25)}
+.type-action{background:rgba(61,232,160,0.1);color:var(--accent);border:1px solid rgba(61,232,160,0.25)}
 
+/* ── Submit ── */
 .submit-wrap{width:100%;max-width:720px;padding:28px 16px 0}
 .submit-btn{width:100%;background:var(--accent);color:#061812;border:none;padding:15px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.15s,transform 0.1s}
 .submit-btn:hover{opacity:0.9;transform:translateY(-1px)}
@@ -107,14 +115,14 @@ footer strong{color:var(--muted)}
 
 <div class="page-header">
   <div class="eyebrow">Section 3 of 3 · Final Section</div>
-  <div class="page-title">Situational Prompting</div>
-  <div class="page-sub">2 real-world scenarios &nbsp;·&nbsp; Pass mark 100% &nbsp;·&nbsp; Covers Days 7–8 applied workflows</div>
+  <div class="page-title">GHL Workflow Builder</div>
+  <div class="page-sub">2 real-world scenarios &nbsp;·&nbsp; Build the correct automation sequence &nbsp;·&nbsp; Covers Days 7–8</div>
 </div>
 
 <div class="intro-callout">
   <div class="intro-callout-inner">
-    <strong>↓ How to approach this section</strong>
-    These are real situations you'll face on the job. There's no trick — pick the answer that reflects what you'd actually do using the tools and workflows covered in training. Think before you click.
+    <strong>How this works</strong>
+    You'll be given a real client scenario. Your job: build the GHL workflow by clicking the steps in the correct order. Steps will stack as you select them. Click the × on a placed step to remove and reorder it. Submit when both workflows are complete.
   </div>
 </div>
 
@@ -125,11 +133,11 @@ footer strong{color:var(--muted)}
   <div id="completeBadge"></div>
 </div>
 
-<div class="q-list" id="qList"></div>
+<div id="scenariosContainer"></div>
 
 <div class="submit-wrap">
-  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit &amp; Complete Assessment →</button>
-  <div class="submit-note">Answer both scenarios before submitting.</div>
+  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()" disabled>Submit &amp; Complete Assessment →</button>
+  <div class="submit-note">Build both workflows before submitting.</div>
 </div>
 <div class="back-wrap">
   <a id="backLink" href="index.html" class="back-link" style="display:none">← Back to Assessment Hub</a>
@@ -140,173 +148,250 @@ footer strong{color:var(--muted)}
 </footer>
 
 <script>
-const letters = ['A','B','C','D'];
+// ── Step type detector ──
+function stepType(label) {
+  if (label.startsWith('Trigger')) return 'trigger';
+  if (label.startsWith('Wait'))    return 'wait';
+  return 'action';
+}
+function typeBadge(label) {
+  const t = stepType(label);
+  const cls = t === 'trigger' ? 'type-trigger' : t === 'wait' ? 'type-wait' : 'type-action';
+  return `<span class="step-type ${cls}">${t}</span>`;
+}
 
-const questions = [
+// ── Scenario data ──
+const scenarios = [
   {
-    scenario: "Scenario 1 — GHL Automation",
-    context: "Your client just launched a new landing page. The goal: whenever someone fills out the lead form, they should receive a 'Thank You' SMS within 2 minutes and be automatically added to the 'New Enquiry' pipeline stage. Your client runs GHL.",
-    q: "What do you build?",
-    opts: [
-      "A GHL campaign that sends bulk SMS to all new contacts every day",
-      "A GHL workflow: Trigger (form submitted) → Wait 2 min → Action (send SMS) → Action (move to 'New Enquiry' pipeline stage)",
-      "Manually check for new form submissions each morning and send the SMS yourself",
-      "Set a recurring calendar reminder to check GHL every 2 minutes during business hours"
+    title: "Scenario 1 — New Lead Follow-Up",
+    context: "A client just launched a new landing page. Every time someone submits the lead form, they need: the team notified immediately, a 2-minute delay (so the SMS doesn't feel instant-bot), an SMS sent to the lead, and the contact moved into the 'New Enquiry' pipeline stage.",
+    steps: [
+      "Trigger — Form Submitted",
+      "Action — Send Internal Notification to Team",
+      "Wait — 2 Minutes",
+      "Action — Send SMS: \"Thanks for your enquiry, we'll be in touch shortly!\"",
+      "Action — Move Contact to Pipeline Stage: \"New Enquiry\""
     ],
-    ans: 1,
-    exp: "This is a Trigger → Wait → Action → Action workflow. Form submission is the trigger, a 2-minute wait controls timing, then two actions execute: SMS send and pipeline move. Campaigns are for scheduled broadcasts — not event-triggered sequences. Manual checking defeats the entire purpose of automation."
+    scrambled: [2, 4, 0, 3, 1],
+    explanations: [
+      "The Trigger is always first — it's the event that fires the entire workflow.",
+      "Internal notification goes before the Wait so the team knows immediately when a new lead arrives.",
+      "The Wait step delays what comes next — nothing pauses while it counts down.",
+      "SMS fires after the delay — the timed gap makes it feel intentional, not automated.",
+      "Pipeline move is the final step — the contact is now tracked in the right stage."
+    ]
   },
   {
-    scenario: "Scenario 2 — AI Meeting + Claude Workflow",
-    context: "You just finished a 90-minute onboarding call with a new client. Supernormal recorded the entire meeting. Your CEO needs a clean summary with: the top 3 priorities discussed, all decisions made, and next steps — by end of day.",
-    q: "What is the fastest and most accurate approach?",
-    opts: [
-      "Rewatch the 90-minute recording and manually write the summary yourself",
-      "Ask Supernormal to auto-email the summary directly to your CEO without reviewing it first",
-      "Open the Supernormal transcript in Claude, prompt it to extract the top 3 priorities, decisions, and next steps in a formatted document — then review and send",
-      "Use Perplexity to research the client's business priorities online and compile a summary from public sources"
+    title: "Scenario 2 — No-Show Re-engagement",
+    context: "A client needs an automatic follow-up when a contact misses their scheduled appointment. When GHL marks an appointment as 'No Show', wait 30 minutes, send a re-booking email, tag the contact as 'No Show', then move them into the 'Re-engagement' pipeline stage.",
+    steps: [
+      "Trigger — Appointment Status Changed to \"No Show\"",
+      "Wait — 30 Minutes",
+      "Action — Send Email: \"We missed you! Click here to rebook.\"",
+      "Action — Add Tag: \"No Show\"",
+      "Action — Move Contact to Pipeline Stage: \"Re-engagement\""
     ],
-    ans: 2,
-    exp: "This is the Day 8 Meeting AI + Claude Combo workflow in action. Supernormal captures and transcribes → Claude structures the output based on your specific prompt → you review before sending. Never send AI-generated summaries without reviewing first. Perplexity would give you public info — not what was actually said in the meeting."
+    scrambled: [3, 0, 4, 1, 2],
+    explanations: [
+      "Trigger fires first — the no-show status change is the event that kicks off the automation.",
+      "Wait 30 minutes before acting — a short buffer before reaching out feels more human.",
+      "Email is the primary outreach — re-booking while intent is still warm.",
+      "Tag the contact after the email — labels them for filtering and reporting.",
+      "Pipeline move is last — organises them into the right stage for the team to follow up."
+    ]
   }
 ];
 
-const qList = document.getElementById('qList');
-const userAnswers = new Array(questions.length).fill(null);
+// ── State ──
+const userSequences = [[], []]; // userSequences[si] = array of step indices in user's order
+let isSubmitted = false;
 
-questions.forEach((q, qi) => {
-  const card = document.createElement('div');
-  card.className = 'q-card';
-  card.id = `q${qi}`;
-
-  let html = `
-    <div class="scenario-header">
-      <div class="scenario-num">${qi+1}</div>
-      <span class="scenario-tag">${q.scenario}</span>
-    </div>
-    <div class="scenario-body">
-      <div class="context-box">
-        <div class="context-label">Situation</div>
-        ${q.context}
-      </div>
-      <div class="q-text">${q.q}</div>
-      <div class="options" id="opts${qi}">`;
-
-  q.opts.forEach((opt, oi) => {
-    html += `<button class="option" id="opt${qi}_${oi}" onclick="selectAnswer(${qi},${oi})">`+
-            `<span class="opt-letter">${letters[oi]}</span><span>${opt}</span></button>`;
+// ── Render ──
+function renderAll() {
+  const container = document.getElementById('scenariosContainer');
+  container.innerHTML = '';
+  scenarios.forEach((sc, si) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'scenario-wrap';
+    wrap.innerHTML = buildScenarioHTML(sc, si);
+    container.appendChild(wrap);
   });
-
-  html += `</div>
-    <div class="q-feedback" id="fb${qi}">
-      <div class="fb-label" id="fbl${qi}"></div>
-      <div id="fbb${qi}"></div>
-    </div>
-  </div>`;
-
-  card.innerHTML = html;
-  qList.appendChild(card);
-});
-
-function selectAnswer(qi, oi) {
-  if (document.getElementById(`q${qi}`).classList.contains('submitted')) return;
-  userAnswers[qi] = oi;
-  document.querySelectorAll(`#opts${qi} .option`).forEach(o => o.classList.remove('selected'));
-  document.getElementById(`opt${qi}_${oi}`).classList.add('selected');
   updateSubmitState();
 }
 
-function updateSubmitState() {
-  const answered = userAnswers.filter(a => a !== null).length;
-  document.getElementById('submitBtn').disabled = answered < questions.length;
-  document.querySelector('.submit-note').textContent =
-    answered === questions.length ? 'Both scenarios answered — ready to submit.' : `${answered} of ${questions.length} scenarios answered.`;
+function buildScenarioHTML(sc, si) {
+  const seq = userSequences[si];
+
+  // Slots
+  let slotsHTML = '';
+  for (let pos = 0; pos < sc.steps.length; pos++) {
+    const placedIdx = seq[pos];
+    let slotClass = 'seq-slot';
+    if (placedIdx !== undefined) slotClass += ' filled';
+    if (isSubmitted && placedIdx !== undefined) {
+      slotClass += placedIdx === pos ? ' correct' : ' wrong';
+    }
+
+    let slotContent = `<div class="slot-num">${pos + 1}</div>`;
+    if (placedIdx !== undefined) {
+      slotContent += `<div class="slot-text">${typeBadge(sc.steps[placedIdx])}${sc.steps[placedIdx]}</div>`;
+      if (!isSubmitted) {
+        slotContent += `<button class="slot-remove" onclick="removeStep(${si},${pos})">✕</button>`;
+      }
+    } else {
+      slotContent += `<div class="slot-placeholder">Click a step below to place here</div>`;
+    }
+
+    let feedbackHTML = '';
+    if (isSubmitted && placedIdx !== undefined) {
+      if (placedIdx === pos) {
+        feedbackHTML = `<div class="slot-feedback fb-correct">✓ Correct — ${sc.explanations[pos]}</div>`;
+      } else {
+        feedbackHTML = `<div class="slot-feedback fb-wrong">✗ This should be: <strong>${sc.steps[pos]}</strong> — ${sc.explanations[pos]}</div>`;
+      }
+    }
+
+    slotsHTML += `<div class="${slotClass}">${slotContent}${feedbackHTML}</div>`;
+  }
+
+  // Pool
+  const placedSet = new Set(seq);
+  let poolHTML = '';
+  if (!isSubmitted) {
+    if (seq.length === sc.steps.length) {
+      poolHTML = `<div class="pool-done">✓ Workflow complete — scroll down when both are done.</div>`;
+    } else {
+      sc.scrambled.forEach(stepIdx => {
+        if (!placedSet.has(stepIdx)) {
+          poolHTML += `<button class="pool-step" onclick="addStep(${si},${stepIdx})">${typeBadge(sc.steps[stepIdx])}${sc.steps[stepIdx]}</button>`;
+        }
+      });
+    }
+  }
+
+  return `
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-num">${si + 1}</div>
+        <span class="scenario-tag">${sc.title}</span>
+      </div>
+      <div class="scenario-body">
+        <div class="context-box">
+          <div class="context-label">Situation</div>
+          ${sc.context}
+        </div>
+        <div class="task-label">Build the Workflow — Click steps in the correct order</div>
+        <div class="seq-slots">${slotsHTML}</div>
+        ${!isSubmitted ? `<div class="pool-label">Available Steps</div><div class="pool-steps">${poolHTML}</div>` : ''}
+      </div>
+    </div>`;
 }
 
-function submitQuiz() {
-  let score = 0;
-  questions.forEach((q, qi) => {
-    const card = document.getElementById(`q${qi}`);
-    card.classList.add('submitted');
-    const ua = userAnswers[qi];
-    const fb = document.getElementById(`fb${qi}`);
-    const fbl = document.getElementById(`fbl${qi}`);
-    const fbb = document.getElementById(`fbb${qi}`);
-    document.querySelectorAll(`#opts${qi} .option`).forEach(o => { o.classList.add('locked'); o.classList.remove('selected'); });
+function addStep(si, stepIdx) {
+  if (isSubmitted) return;
+  if (userSequences[si].length < scenarios[si].steps.length && !userSequences[si].includes(stepIdx)) {
+    userSequences[si].push(stepIdx);
+    renderAll();
+  }
+}
 
-    if (ua === q.ans) {
-      score++;
-      document.getElementById(`opt${qi}_${ua}`).classList.add('correct');
-      card.classList.add('answered-correct');
-      fb.className = 'q-feedback show-correct';
-      fbl.textContent = '✓ Correct';
-      fbb.textContent = q.exp;
-    } else {
-      document.getElementById(`opt${qi}_${ua}`).classList.add('wrong');
-      document.getElementById(`opt${qi}_${q.ans}`).classList.add('correct');
-      card.classList.add('answered-wrong');
-      fb.className = 'q-feedback show-wrong';
-      fbl.textContent = '✗ Incorrect — Correct answer: ' + letters[q.ans];
-      fbb.textContent = q.exp;
-    }
+function removeStep(si, pos) {
+  if (isSubmitted) return;
+  userSequences[si].splice(pos, 1);
+  renderAll();
+}
+
+function updateSubmitState() {
+  const allFilled = scenarios.every((sc, si) => userSequences[si].length === sc.steps.length);
+  const btn = document.getElementById('submitBtn');
+  const note = document.querySelector('.submit-note');
+  btn.disabled = !allFilled || isSubmitted;
+  if (allFilled) {
+    note.textContent = 'Both workflows built — ready to submit.';
+  } else {
+    const remaining = scenarios.reduce((acc, sc, si) => acc + (sc.steps.length - userSequences[si].length), 0);
+    note.textContent = `${remaining} step${remaining !== 1 ? 's' : ''} still to place across both scenarios.`;
+  }
+}
+
+// ── Submit ──
+function submitQuiz() {
+  if (isSubmitted) return;
+  isSubmitted = true;
+
+  let totalScore = 0;
+  scenarios.forEach((sc, si) => {
+    userSequences[si].forEach((stepIdx, pos) => {
+      if (stepIdx === pos) totalScore++;
+    });
   });
 
-  const banner = document.getElementById('scoreBanner');
-  const badge = document.getElementById('completeBadge');
-  document.getElementById('scoreNum').textContent = `${score} / 2`;
+  const totalPossible = scenarios.reduce((a, sc) => a + sc.steps.length, 0);
+  const pct = Math.round((totalScore / totalPossible) * 100);
+  const passed = pct >= 80;
 
-  if (score === 2) {
+  // Save to sessionStorage
+  sessionStorage.setItem('kp_s3', JSON.stringify({ score: totalScore, total: totalPossible, pct, passed }));
+
+  // Re-render with feedback
+  renderAll();
+
+  // Score banner
+  const banner = document.getElementById('scoreBanner');
+  const badge  = document.getElementById('completeBadge');
+  document.getElementById('scoreNum').textContent = `${totalScore} / ${totalPossible}`;
+
+  if (totalScore === totalPossible) {
     banner.className = 'score-banner perfect';
     document.getElementById('scoreLabel').textContent = '✓ PERFECT — SECTION COMPLETE';
-    document.getElementById('scoreMsg').textContent = 'You nailed both scenarios. You know how to pick the right tool for the right job. Assessment complete.';
+    document.getElementById('scoreMsg').textContent = 'You built both workflows correctly. You understand GHL automation logic. Assessment complete.';
     badge.innerHTML = '<div class="complete-badge">✓ All 3 Sections Complete — Day 10 Assessment Done</div>';
-  } else if (score === 1) {
+  } else if (passed) {
     banner.className = 'score-banner good';
-    document.getElementById('scoreLabel').textContent = 'Almost There';
-    document.getElementById('scoreMsg').textContent = 'You got one right. Review the missed scenario below and make sure you understand the reasoning — the "why" matters as much as the answer.';
+    document.getElementById('scoreLabel').textContent = 'Good — Mostly Correct';
+    document.getElementById('scoreMsg').textContent = 'You got most steps right. Review the highlighted steps below — order matters in GHL automations.';
   } else {
     banner.className = 'score-banner review';
     document.getElementById('scoreLabel').textContent = 'Review Needed';
-    document.getElementById('scoreMsg').textContent = 'Revisit Days 7 and 8 — focus on the GHL workflow structure and the Meeting AI + Claude combo. These are core daily workflows.';
+    document.getElementById('scoreMsg').textContent = 'Revisit Days 7 and 8 — focus on how Triggers, Waits, and Actions sequence in GHL workflows.';
   }
 
   banner.style.display = 'block';
   document.getElementById('submitBtn').style.display = 'none';
   document.getElementById('backLink').style.display = 'inline-block';
   document.querySelector('.submit-note').style.display = 'none';
-  banner.scrollIntoView({behavior:'smooth', block:'center'});
+  banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
   window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
 
-  // --- Formspree submission ---
+  // ── Formspree submission ──
   try {
     const trainee = JSON.parse(sessionStorage.getItem('kp_trainee') || '{}');
     const s1 = JSON.parse(sessionStorage.getItem('kp_s1') || '{}');
     const s2 = JSON.parse(sessionStorage.getItem('kp_s2') || '{}');
-    const s3Score = score;
-    const s3Total = questions.length;
-    const totalScore = (s1.score || 0) + (s2.score || 0) + s3Score;
-    const totalPossible = (s1.total || 20) + (s2.total || 20) + s3Total;
+    const totalOverall = (s1.score || 0) + (s2.score || 0) + totalScore;
+    const totalOverallPossible = (s1.total || 20) + (s2.total || 10) + totalPossible;
 
     fetch('https://formspree.io/f/mkoebnen', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
-        name:        trainee.name  || '—',
-        email:       trainee.email || '—',
-        role:        trainee.role  || '—',
-        cohort:      trainee.cohort || '—',
-        assessment:  'Week 2 Assessment — Day 10',
-        section_1_ghl:       `${s1.score || 0}/${s1.total || 20} (${s1.pct || 0}%) — ${s1.passed ? 'PASSED' : 'NOT PASSED'}`,
-        section_2_ai_meeting:`${s2.score || 0}/${s2.total || 20} (${s2.pct || 0}%) — ${s2.passed ? 'PASSED' : 'NOT PASSED'}`,
-        section_3_situational:`${s3Score}/${s3Total}`,
-        total_score: `${totalScore}/${totalPossible}`,
-        submitted_at: new Date().toISOString()
+        name:                   trainee.name   || '—',
+        email:                  trainee.email  || '—',
+        role:                   trainee.role   || '—',
+        cohort:                 trainee.cohort || '—',
+        assessment:             'Week 2 Assessment — Day 10',
+        section_1_ghl:          `${s1.score || 0}/${s1.total || 20} (${s1.pct || 0}%) — ${s1.passed ? 'PASSED' : 'NOT PASSED'}`,
+        section_2_ai_meeting:   `${s2.score || 0}/${s2.total || 10} (${s2.pct || 0}%) — ${s2.passed ? 'PASSED' : 'NOT PASSED'}`,
+        section_3_workflow:     `${totalScore}/${totalPossible} (${pct}%) — ${passed ? 'PASSED' : 'REVIEW'}`,
+        total_score:            `${totalOverall}/${totalOverallPossible}`,
+        submitted_at:           new Date().toISOString()
       })
     });
-  } catch(e) { /* fail silently — don't block the UX */ }
+  } catch(e) { /* fail silently */ }
 }
 
-updateSubmitState();
+// ── Init ──
+renderAll();
 </script>
 </body>
 </html>
