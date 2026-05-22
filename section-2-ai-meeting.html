@@ -100,7 +100,7 @@ footer strong{color:var(--muted)}
 <div class="section-divider">
   <div class="section-divider-inner">
     <span class="divider-tag">Part A</span>
-    <span class="divider-label">AI Meeting Tools — Questions 1–9</span>
+    <span class="divider-label">AI Meeting Tools — Questions 1–5</span>
   </div>
 </div>
 
@@ -144,12 +144,12 @@ let partBInserted = false;
 
 questions.forEach((q, qi) => {
   // Insert Part B divider before Q10
-  if (qi === 9 && !partBInserted) {
+  if (qi === 5 && !partBInserted) {
     partBInserted = true;
     const div = document.createElement('div');
     div.className = 'section-divider';
     div.style.paddingTop = '8px';
-    div.innerHTML = `<div class="section-divider-inner"><span class="divider-tag">Part B</span><span class="divider-label">AI Glossary — Questions 10–20</span></div>`;
+    div.innerHTML = `<div class="section-divider-inner"><span class="divider-tag">Part B</span><span class="divider-label">AI Glossary — Questions 6–10</span></div>`;
     qList.appendChild(div);
   }
 
