@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyPlayers HQ · Section 1: GHL Automations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#061812;
+  --surface:#0a2016;
+  --card:#0f2a1c;
+  --border:#1a4230;
+  --accent:#3de8a0;
+  --accent-glow:rgba(61,232,160,0.12);
+  --text:#f0f0f0;
+  --muted:#5a8070;
+  --green:#22c55e;
+  --red:#ef4444;
+  --gold:#f5c518;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 80px}
+
+/* ── NAV ── */
+nav{width:100%;background:rgba(6,24,18,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px}
+.nav-left{display:flex;align-items:center;gap:10px}
+.wordmark{font-weight:800;font-size:14px;letter-spacing:-0.3px;color:#fff}
+.wordmark span{color:var(--accent)}
+.nav-badge{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:99px}
+.nav-right{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+/* ── HEADER ── */
+.page-header{text-align:center;padding:36px 16px 20px;max-width:720px;width:100%}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.page-title{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:6px}
+.page-sub{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── SCORE BANNER ── */
+.score-banner{display:none;width:100%;max-width:720px;margin:0 16px 24px;padding:18px 24px;border-radius:14px;text-align:center}
+.score-banner.pass{background:#0c2318;border:1px solid rgba(34,197,94,0.3)}
+.score-banner.fail{background:#1e0f0f;border:1px solid rgba(239,68,68,0.3)}
+.score-big{font-size:36px;font-weight:800;line-height:1}
+.score-banner.pass .score-big{color:var(--green)}
+.score-banner.fail .score-big{color:var(--red)}
+.score-label{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;color:var(--muted)}
+.score-msg{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+/* ── QUESTION LIST ── */
+.q-list{width:100%;max-width:720px;padding:0 16px;display:flex;flex-direction:column;gap:16px}
+
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;transition:border-color 0.2s}
+.q-card.answered-correct{border-color:rgba(34,197,94,0.35);background:#0c2318}
+.q-card.answered-wrong{border-color:rgba(239,68,68,0.25);background:#1e0f0f}
+
+.q-num{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.q-text{font-size:15px;font-weight:600;color:#fff;line-height:1.6;margin-bottom:16px;letter-spacing:-0.1px}
+
+/* Diagrams — outer container keeps KP dark theme */
+.q-diagram{background:#0d1f17;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.q-diagram-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+
+/* GHL Workflow — nodes styled to match real GHL Workflow Builder UI */
+.wf{display:flex;flex-direction:column;align-items:center}
+.wf-node{background:#ffffff;border:1px solid #e5e7eb;border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:10px;width:260px;max-width:100%;box-shadow:0 1px 4px rgba(0,0,0,0.10)}
+.wf-node.trigger-node{background:#f0fdf4;border:1.5px solid #22c55e;border-left:4px solid #22c55e}
+.wf-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+/* GHL-authentic icon colors */
+.icon-green{background:#dcfce7;color:#16a34a}
+.icon-purple{background:#ede9fe;color:#7c3aed}
+.icon-blue{background:#dbeafe;color:#2563eb}
+.icon-teal{background:#ccfbf1;color:#0d9488}
+.icon-orange{background:#ffedd5;color:#ea580c}
+.icon-amber{background:#fef9c3;color:#ca8a04}
+.wf-label{font-size:12px;font-weight:500;color:#374151}
+.wf-node.trigger-node .wf-label{color:#15803d;font-weight:600}
+.wf-arrow{width:1px;height:20px;background:#d1d5db;margin:0 auto;position:relative}
+.wf-arrow::after{content:'↓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#f9fafb;border:1px solid #d1d5db;border-radius:50%;width:16px;height:16px;font-size:9px;color:#6b7280;display:flex;align-items:center;justify-content:center;line-height:16px;text-align:center}
+.wf-caption{font-size:11px;color:#6b7280;text-align:center;margin-top:12px;font-style:italic}
+
+/* GHL Pipeline — styled to match real GHL Pipelines kanban view */
+.pipe-wrap{background:#f8fafc;border-radius:8px;padding:10px;overflow-x:auto;padding-bottom:8px}
+.pipeline{display:flex;gap:8px;min-width:500px}
+.pl-col{flex:1;background:#ffffff;border:1px solid #e5e7eb;border-radius:8px;padding:9px;min-width:88px}
+.pl-col-head{font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;line-height:1.3;padding-bottom:6px;border-bottom:2px solid #e5e7eb}
+.pl-col.active .pl-col-head{color:#1d4ed8;border-color:#3b82f6}
+.pl-card-item{background:#ffffff;border-radius:6px;padding:8px;font-size:11px;color:#374151;border:1px solid #e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,0.07);line-height:1.4}
+.pl-card-item strong{color:#111827;display:block;font-size:11px;margin-bottom:2px}
+.pl-meta{color:#6b7280;font-size:10px;margin-top:3px}
+.pl-empty{color:#9ca3af;font-size:10px;padding:4px 0}
+
+/* Options */
+.options{display:flex;flex-direction:column;gap:8px}
+.option{background:#0a1e14;border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;transition:border-color 0.15s,background 0.15s;font-size:13.5px;color:#c0d8c8;text-align:left;width:100%;font-family:'Inter',sans-serif;line-height:1.5}
+.option:hover:not(.locked){border-color:var(--accent);background:var(--accent-glow)}
+.option.selected{border-color:var(--accent);background:var(--accent-glow)}
+.option.correct{border-color:var(--green);background:#0c2318;color:#fff}
+.option.wrong{border-color:var(--red);background:#1e0f0f;color:#fff}
+.option.locked{cursor:default}
+.opt-letter{font-weight:700;font-size:11px;color:var(--accent);min-width:16px;flex-shrink:0;margin-top:2px;letter-spacing:0.5px}
+.option.correct .opt-letter{color:var(--green)}
+.option.wrong .opt-letter{color:var(--red)}
+
+/* Feedback */
+.q-feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:9px;font-size:13px;line-height:1.65}
+.q-feedback.show-correct{display:block;background:#0c2318;border:1px solid rgba(34,197,94,0.2);color:#86efac}
+.q-feedback.show-wrong{display:block;background:#1e0f0f;border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
+.fb-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+
+/* Submit */
+.submit-wrap{width:100%;max-width:720px;padding:24px 16px 0}
+.submit-btn{width:100%;background:var(--accent);color:#061812;border:none;padding:15px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.2px;transition:opacity 0.15s,transform 0.1s}
+.submit-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:0.4;cursor:default;transform:none}
+.submit-note{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* Back link */
+.back-wrap{width:100%;max-width:720px;padding:20px 16px 0;text-align:center}
+.back-link{display:inline-block;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:9px 20px;border-radius:9px;transition:border-color 0.15s,color 0.15s}
+.back-link:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Footer */
+footer{margin-top:48px;text-align:center;font-size:11px;color:var(--border)}
+footer strong{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <span class="wordmark">Key<span>Players</span> HQ</span>
+    <span class="nav-badge">VA Academy</span>
+    <span class="nav-badge" style="color:#f5c518;border-color:rgba(245,197,24,0.3);background:rgba(245,197,24,0.06);">Internal Use Only</span>
+  </div>
+  <div class="nav-right"><span class="dot"></span> Day 10 · Assessment</div>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Section 1 of 3 · GHL Module</div>
+  <div class="page-title">GHL Automations</div>
+  <div class="page-sub">20 questions &nbsp;·&nbsp; Pass mark 80% (16/20)</div>
+</div>
+
+<!-- SCORE BANNER (hidden until submit) -->
+<div class="score-banner" id="scoreBanner">
+  <div class="score-big" id="scoreNum">—</div>
+  <div class="score-label" id="scoreLabel">—</div>
+  <div class="score-msg" id="scoreMsg">—</div>
+</div>
+
+<!-- QUESTION LIST -->
+<div class="q-list" id="qList"></div>
+
+<!-- SUBMIT -->
+<div class="submit-wrap">
+  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit Assessment →</button>
+  <div class="submit-note">Answer all 20 questions before submitting.</div>
+</div>
+<div class="back-wrap">
+  <a id="backLink" href="index.html" class="back-link" style="display:none">← Back to Assessment Hub</a>
+</div>
+
+
+<footer>
+  <strong>KeyPlayers HQ</strong> · Real Humans. Powered by AI.<br>VA Academy · AI Training Programme · Day 10
+</footer>
+
+<script>
+const PASS = 16;
+const letters = ['A','B','C','D'];
+
+/* ── Diagram HTML helpers ── */
+const diagramWait = `
+<div class="q-diagram">
+  <div class="q-diagram-label">↓ Read this workflow</div>
+  <div class="wf">
+    <div class="wf-node"><div class="wf-icon icon-green">✉</div><span class="wf-label">Email</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-amber">🔔</div><span class="wf-label">Internal Notification</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-purple">⏱</div><span class="wf-label">Wait</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-blue">💬</div><span class="wf-label">SMS</span></div>
+  </div>
+  <div class="wf-caption">A GHL workflow — notice the purple step between Email and SMS</div>
+</div>`;
+
+const diagramSurvey = `
+<div class="q-diagram">
+  <div class="q-diagram-label">↓ Read this workflow before answering</div>
+  <div class="wf">
+    <div class="wf-node trigger-node"><div class="wf-icon icon-teal">📋</div><span class="wf-label">Survey Submitted ← TRIGGER</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-blue">👤</div><span class="wf-label">Create Contact</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-green">🏷</div><span class="wf-label">Add Tag</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-orange">💲</div><span class="wf-label">Create or Update Opportunity</span></div>
+    <div class="wf-arrow"></div>
+    <div class="wf-node"><div class="wf-icon icon-blue">👥</div><span class="wf-label">Assign to User</span></div>
+  </div>
+  <div class="wf-caption">1 trigger, 4 actions — read top to bottom</div>
+</div>`;
+
+const diagramPipeline = `
+<div class="q-diagram">
+  <div class="q-diagram-label">↓ Sparkle Clean — Sales Pipeline</div>
+  <div class="pipe-wrap">
+    <div class="pipeline">
+      <div class="pl-col"><div class="pl-col-head">Newly Appointed</div><div class="pl-empty">0 opportunities</div></div>
+      <div class="pl-col active"><div class="pl-col-head">Contacted — No Reply</div><div class="pl-card-item"><strong>Sample Lead</strong>Source: FB Ads<div class="pl-meta">Value: C$150.00</div></div></div>
+      <div class="pl-col"><div class="pl-col-head">Quote Sent</div><div class="pl-empty">0 opportunities</div></div>
+      <div class="pl-col"><div class="pl-col-head">No Show — Follow Up</div><div class="pl-empty">0 opportunities</div></div>
+      <div class="pl-col"><div class="pl-col-head">Appt. Booked</div><div class="pl-empty">0 opportunities</div></div>
+    </div>
+  </div>
+  <div class="wf-caption">GHL Pipeline — each column is a stage a contact moves through</div>
+</div>`;
+
+const questions = [
+  {q:"What are the three components of every GHL workflow?",opts:["Tag, Pipeline, Contact","Trigger, Condition, Action","Email, SMS, Wait","Form, Note, Task"],ans:1,exp:"Every GHL workflow follows the same structure: Trigger (what starts it), Condition (optional filter), Action (what GHL does in response)."},
+  {q:"What is a 'trigger' in a GHL workflow?",opts:["A manual action performed by a VA","The event that starts the workflow","The result of a workflow completing","A filter that checks if the workflow should continue"],ans:1,exp:"The trigger is always the first block — the event that kicks everything off. Examples: contact created, tag added, form submitted."},
+  {q:"What is the purpose of a 'condition' in a GHL workflow?",opts:["To send an email automatically","To start the workflow","To filter whether the trigger meets criteria before continuing","To assign a contact to a team member"],ans:2,exp:"Conditions make automations smart. They check whether the trigger meets certain criteria — if yes, proceed; if not, stop or branch to a different path."},
+  {q:"Which of the following is an example of a GHL workflow trigger?",opts:["An email is sent by the VA","A contact is created","A note is added manually","A pipeline card is viewed"],ans:1,exp:"A contact being created is an event GHL can detect and use to start a workflow. Manual actions like adding a note don't trigger workflows automatically."},
+  {q:"What happens in a GHL workflow when a condition is NOT met?",opts:["The workflow sends an error alert","The workflow continues to the next action anyway","The workflow stops or branches to a different path","The workflow deletes the contact"],ans:2,exp:"When a condition isn't met, GHL either stops the workflow or takes a different branch — this is what makes conditional logic powerful."},
+  {q:"Which of the following is NOT a standard GHL workflow action?",opts:["Send an email","Add a tag","Create a new sub-account","Move a pipeline card"],ans:2,exp:"Creating a sub-account is an administrative function, not a workflow action. Standard actions include emails, SMS, tags, and pipeline moves."},
+  {q:"A new lead fills out a contact form and the workflow should fire automatically. What is the FIRST component you define?",opts:["Action: Send a welcome email","Condition: Check if the lead has a phone number","Trigger: Contact form submitted","Action: Add to pipeline"],ans:2,exp:"Always start with the trigger. Nothing in a workflow happens until the trigger is defined — it's the event that sets everything else in motion."},
+  {q:"Look at the workflow above. What does the purple 'Wait' step do?",diagram:diagramWait,opts:["Pauses the entire CRM","Delays the next action by a set amount of time","Holds the contact until the VA manually approves","Keeps the contact in a pending stage indefinitely"],ans:1,exp:"A Wait step introduces a timed delay before the next action fires. Here, the Wait sits between Internal Notification and SMS — the SMS won't send until the delay has passed."},
+  {q:"Tags in GHL are primarily used to:",opts:["Change a contact's pipeline stage automatically","Label and categorize contacts for targeting and workflow triggers","Send bulk emails to all contacts","Archive inactive contacts"],ans:1,exp:"Tags are labels you attach to contacts. They're powerful because they can trigger workflows — whenever a tag is added, GHL can fire an automation."},
+  {q:"In the KP training example, after a 'New Lead' tag is added, what was the first action in the workflow?",opts:["Move to pipeline immediately","Wait 5 minutes, then send a welcome email","Assign to a team member","Send an SMS immediately"],ans:1,exp:"The KP example workflow: New Lead tag → Wait 5 min → Send welcome email → Add to pipeline. The wait step came first."},
+  {q:"What is the correct definition of a GHL 'workflow'?",opts:["A manual checklist a VA follows during onboarding","An automated sequence of actions triggered by an event in GHL","A report showing all contacts added this week","A template used for email campaigns"],ans:1,exp:"A workflow is GHL's automation engine — an automated sequence that fires based on a trigger and runs actions without any manual VA involvement."},
+  {q:"What is the key difference between a GHL 'workflow' and a 'campaign'?",opts:["Campaigns are triggered by contact behavior; workflows are scheduled","Workflows are automated sequences triggered by events; campaigns are scheduled or broadcast communications","They are the same thing with different names","Campaigns only work for SMS; workflows only for email"],ans:1,exp:"Workflows react to contact behavior (event-driven). Campaigns are scheduled outreach sequences sent to a list. Knowing the difference helps you pick the right tool."},
+  {q:"A lead fills out a form, gets tagged 'Hot Lead,' and should automatically move to the 'New Enquiry' pipeline stage. What handles this?",opts:["A contact note","A manual pipeline update by the VA","A GHL workflow","A broadcast campaign"],ans:2,exp:"Textbook workflow use case: form submission → tag → workflow → pipeline move. All automatic."},
+  {q:"Look at the workflow above. Where should you look FIRST to understand what this workflow does?",diagram:diagramSurvey,opts:["The last action block (Assign to User)","The condition block","The trigger at the top (Survey Submitted)","The wait step"],ans:2,exp:"Always read workflows top to bottom, starting with the trigger. 'Survey Submitted' is what starts everything — if you don't know the trigger, you can't understand when or why it fires."},
+  {q:"A VA notices a contact didn't receive a welcome email. The workflow looks correct. What should they check FIRST?",opts:["Whether the email template exists","Whether the trigger fired — did the contact meet the trigger condition?","Whether the email landed in spam","Whether the contact has a valid phone number"],ans:1,exp:"Troubleshooting starts at the trigger. If the trigger didn't fire, nothing downstream will execute — no matter how correct the rest of the workflow is."},
+  {q:"Look at the pipeline above. A contact moves from 'Newly Appointed' to 'Contacted — No Reply.' Which GHL trigger would fire an automation at that moment?",diagram:diagramPipeline,opts:["Tag Added","Contact Created","Pipeline Stage Changed","Survey Submitted"],ans:2,exp:"Pipeline Stage Changed is the trigger that detects when a contact moves between stages. Moving from 'Newly Appointed' to 'Contacted — No Reply' would fire that trigger and kick off a follow-up sequence."},
+  {q:"Which best describes a 'branching' workflow in GHL?",opts:["A workflow that sends emails only on weekdays","A workflow with two different paths depending on whether a condition is met","A workflow that runs twice for each contact","A workflow that copies a contact to another sub-account"],ans:1,exp:"Branching uses conditions to split a workflow into multiple paths. Example: if contact has a phone number, send SMS; if not, send email instead."},
+  {q:"What is the KP Automation Library?",opts:["A folder of email templates stored in Google Drive","A collection of pre-built, tested GHL workflows used across KP client accounts","A list of all contacts tagged as 'Automated'","A reporting dashboard showing automation performance"],ans:1,exp:"The KP Automation Library is a set of proven, ready-to-use workflows built for common client scenarios. VAs should know what's in it to avoid building from scratch."},
+  {q:"A workflow sends a welcome SMS 5 minutes after a contact is tagged 'New Lead.' The SMS is not being sent. Which is the LEAST likely cause?",opts:["The trigger is not firing","The wait step is set incorrectly","The SMS template is missing","The contact's pipeline stage is wrong"],ans:3,exp:"Pipeline stage has no relationship to whether an SMS fires in this workflow. The trigger, wait step, and SMS template are all directly in the chain."},
+  {q:"What is the biggest operational risk when automations run on a live GHL account?",opts:["VAs might build the wrong type of workflow","The automation could fire on real client contacts and send unintended messages","The GHL interface might look different for each VA","The trainer might forget the steps"],ans:1,exp:"Live GHL accounts contain real contacts. A misconfigured workflow can fire and send unprofessional or premature messages to actual leads or clients — the highest operational risk."}
+];
+
+/* ── Build question cards ── */
+const qList = document.getElementById('qList');
+const userAnswers = new Array(questions.length).fill(null);
+
+questions.forEach((q, qi) => {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = `q${qi}`;
+
+  let html = `<div class="q-num">Question ${qi+1} of ${questions.length}</div>`;
+  if (q.diagram) html += q.diagram;
+  html += `<div class="q-text">${q.q}</div><div class="options" id="opts${qi}">`;
+
+  q.opts.forEach((opt, oi) => {
+    html += `<button class="option" id="opt${qi}_${oi}" onclick="selectAnswer(${qi},${oi})">`+
+            `<span class="opt-letter">${letters[oi]}</span><span>${opt}</span></button>`;
+  });
+
+  html += `</div><div class="q-feedback" id="fb${qi}"><div class="fb-label" id="fbl${qi}"></div><div id="fbb${qi}"></div></div>`;
+  card.innerHTML = html;
+  qList.appendChild(card);
+});
+
+function selectAnswer(qi, oi) {
+  if (document.getElementById(`q${qi}`).classList.contains('submitted')) return;
+  userAnswers[qi] = oi;
+
+  const opts = document.querySelectorAll(`#opts${qi} .option`);
+  opts.forEach(o => o.classList.remove('selected'));
+  document.getElementById(`opt${qi}_${oi}`).classList.add('selected');
+  updateSubmitState();
+}
+
+function updateSubmitState() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  document.getElementById('submitBtn').disabled = answered < questions.length;
+  document.querySelector('.submit-note').textContent =
+    answered === questions.length
+      ? `All ${questions.length} answered — ready to submit.`
+      : `${answered} of ${questions.length} answered.`;
+}
+
+function submitQuiz() {
+  let score = 0;
+  questions.forEach((q, qi) => {
+    const card = document.getElementById(`q${qi}`);
+    card.classList.add('submitted');
+    const ua = userAnswers[qi];
+    const fb = document.getElementById(`fb${qi}`);
+    const fbl = document.getElementById(`fbl${qi}`);
+    const fbb = document.getElementById(`fbb${qi}`);
+    const opts = document.querySelectorAll(`#opts${qi} .option`);
+    opts.forEach(o => { o.classList.add('locked'); o.classList.remove('selected'); });
+
+    if (ua === q.ans) {
+      score++;
+      opts[ua].classList.add('correct');
+      card.classList.add('answered-correct');
+      fb.className = 'q-feedback show-correct';
+      fbl.textContent = '✓ Correct';
+      fbb.textContent = q.exp;
+    } else {
+      opts[ua].classList.add('wrong');
+      opts[q.ans].classList.add('correct');
+      card.classList.add('answered-wrong');
+      fb.className = 'q-feedback show-wrong';
+      fbl.textContent = '✗ Incorrect — Correct answer: ' + letters[q.ans];
+      fbb.textContent = q.exp;
+    }
+  });
+
+  const pct = Math.round((score / questions.length) * 100);
+  const passed = score >= PASS;
+  const banner = document.getElementById('scoreBanner');
+  banner.className = 'score-banner ' + (passed ? 'pass' : 'fail');
+  banner.style.display = 'block';
+  document.getElementById('scoreNum').textContent = `${score}/20 — ${pct}%`;
+  document.getElementById('scoreLabel').textContent = passed ? '✓ PASSED' : '✗ NOT PASSED';
+  document.getElementById('scoreMsg').textContent = passed
+    ? 'Great work. You passed Section 1. Scroll down to review your answers, then move to Section 2.'
+    : `You need 16/20 to pass. You scored ${score}/20. Review the material and re-attempt.`;
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.querySelector('.submit-note').style.display = 'none';
+  document.getElementById('backLink').style.display = 'inline-block';
+  banner.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+updateSubmitState();
+</script>
+</body>
+</html>

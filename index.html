@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyPlayers HQ · Day 10 Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#061812;--surface:#0a2016;--card:#0f2a1c;--border:#1a4230;
+  --accent:#3de8a0;--accent-glow:rgba(61,232,160,0.1);
+  --text:#f0f0f0;--muted:#5a8070;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 72px}
+
+nav{width:calc(100% + 32px);margin:0 -16px;background:rgba(6,24,18,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;margin-bottom:0}
+.nav-left{display:flex;align-items:center;gap:10px}
+.rook{width:30px;height:30px;flex-shrink:0}
+.wordmark{font-weight:800;font-size:14px;letter-spacing:-0.3px;color:#fff}
+.wordmark span{color:var(--accent)}
+.nav-badge{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:99px}
+.nav-right{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+.hero{text-align:center;padding:52px 0 36px;max-width:600px}
+.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.hero-title{font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1.2;margin-bottom:10px}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.7}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:900px;width:100%}
+
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:26px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:0;transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0;transition:opacity 0.2s}
+.card:hover{border-color:rgba(61,232,160,0.4);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4)}
+.card:hover::before{opacity:1}
+
+.card-section-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.section-pill{width:20px;height:20px;border-radius:50%;background:rgba(61,232,160,0.15);border:1px solid rgba(61,232,160,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--accent)}
+
+.card-icon{font-size:30px;margin-bottom:12px}
+.card-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:-0.2px}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6;flex:1;margin-bottom:20px}
+
+.card-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:#888;font-weight:500}
+.badge-pass{background:rgba(61,232,160,0.08);border-color:rgba(61,232,160,0.2);color:var(--accent)}
+.badge-warn{background:rgba(245,197,24,0.08);border-color:rgba(245,197,24,0.2);color:#f5c518}
+.card-arrow{margin-left:auto;font-size:16px;color:var(--border);transition:color 0.2s}
+.card:hover .card-arrow{color:var(--accent)}
+
+.instruction{max-width:900px;width:100%;margin-bottom:24px;background:rgba(61,232,160,0.04);border:1px solid rgba(61,232,160,0.15);border-radius:12px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--muted);line-height:1.6}
+.instruction-icon{color:var(--accent);font-size:15px;flex-shrink:0;margin-top:1px}
+
+footer{margin-top:56px;text-align:center;font-size:11px;color:var(--border)}
+footer strong{color:var(--muted)}
+
+/* ── Login Gate ── */
+#login-gate{position:fixed;inset:0;z-index:1000;background:var(--bg);overflow-y:auto;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+#login-gate.hidden{display:none}
+.gate-wrap{width:100%;max-width:720px}
+.gate-title{font-size:36px;font-weight:800;color:#fff;letter-spacing:-0.8px;line-height:1.1;margin-bottom:10px}
+.gate-subtitle{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:28px}
+.gate-info{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:32px}
+.gate-info ul{list-style:disc;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.gate-info li{font-size:14px;color:#c8ddd4;line-height:1.55}
+.gate-info li strong{color:#fff}
+.gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-bottom:32px}
+@media(max-width:520px){.gate-grid{grid-template-columns:1fr}}
+.gate-field{display:flex;flex-direction:column;gap:7px}
+.gate-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+.gate-label .req{color:var(--accent)}
+.gate-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:13px 16px;font-size:14px;color:#fff;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s}
+.gate-input::placeholder{color:var(--muted)}
+.gate-input:focus{border-color:rgba(61,232,160,0.5)}
+.gate-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.gate-error{font-size:12px;color:#f87171;min-height:18px}
+.gate-btn{background:#1b4a2c;color:#fff;border:none;border-radius:99px;padding:14px 28px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:background 0.2s,transform 0.15s;white-space:nowrap}
+.gate-btn:hover{background:#235e38;transform:translateY(-1px)}
+/* Admin panel */
+#admin-panel{display:none;flex-direction:column;gap:0}
+#admin-panel.show{display:flex}
+#trainee-panel{display:block}
+#trainee-panel.hidden{display:none}
+</style>
+</head>
+<body>
+
+<!-- ── Login Gate Overlay ── -->
+<div id="login-gate">
+  <div class="gate-wrap">
+
+    <!-- Trainee Panel -->
+    <div id="trainee-panel">
+      <div class="gate-title">Week 2 Assessment</div>
+      <div class="gate-subtitle">Day 10 &nbsp;·&nbsp; GHL Automations, AI Meeting Tools &amp; Situational Prompting</div>
+      <div class="gate-info">
+        <ul>
+          <li><strong>60 points total — you need 48 to pass</strong> and earn your Week 2 certificate</li>
+          <li>Sections 1 &amp; 2 are auto-scored instantly. Section 3 will be reviewed by your trainer.</li>
+          <li>Work on your own. You may use your notes and training materials.</li>
+          <li>Complete all three sections before submitting — don't skip any section.</li>
+        </ul>
+      </div>
+      <div class="gate-grid">
+        <div class="gate-field">
+          <label class="gate-label">Full Name <span class="req">*</span></label>
+          <input id="t-name" class="gate-input" type="text" placeholder="Your full name" autocomplete="name" />
+        </div>
+        <div class="gate-field">
+          <label class="gate-label">Email Address <span class="req">*</span></label>
+          <input id="t-email" class="gate-input" type="email" placeholder="your@email.com" autocomplete="email" />
+        </div>
+        <div class="gate-field">
+          <label class="gate-label">VA Role</label>
+          <input id="t-role" class="gate-input" type="text" placeholder="e.g. Research Specialist, EA..." />
+        </div>
+        <div class="gate-field">
+          <label class="gate-label">Cohort / Date</label>
+          <input id="t-cohort" class="gate-input" type="text" placeholder="e.g. May 2026 Cohort" />
+        </div>
+      </div>
+      <div class="gate-footer">
+        <div class="gate-error" id="t-error"></div>
+        <button class="gate-btn" onclick="traineeLogin()">Start Assessment →</button>
+      </div>
+    </div>
+
+    <!-- Admin Panel — only shown via ?admin in URL -->
+    <div id="admin-panel">
+      <div class="gate-title">Trainer Access</div>
+      <div class="gate-subtitle">Day 10 Assessment &nbsp;·&nbsp; Admin View</div>
+      <div class="gate-info">
+        <ul>
+          <li>This view is for trainers only. Enter your password to access the assessment in admin mode.</li>
+          <li>Admin access is not shared with trainees.</li>
+        </ul>
+      </div>
+      <div class="gate-grid" style="grid-template-columns:1fr">
+        <div class="gate-field">
+          <label class="gate-label">Password <span class="req">*</span></label>
+          <input id="a-pass" class="gate-input" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()" />
+        </div>
+      </div>
+      <div class="gate-footer">
+        <div class="gate-error" id="a-error"></div>
+        <button class="gate-btn" onclick="adminLogin()">Access Admin View →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<nav>
+  <div class="nav-left">
+    <span class="wordmark">Key<span>Players</span> HQ</span>
+    <span class="nav-badge">VA Academy</span>
+    <span class="nav-badge" style="color:#f5c518;border-color:rgba(245,197,24,0.3);background:rgba(245,197,24,0.06);">Internal Use Only</span>
+  </div>
+  <div class="nav-right"><span class="dot"></span> AI Training Programme</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">VA Academy · Week 2 · Day 10</div>
+  <div class="hero-title">Assessment<br><span>Day 10</span></div>
+  <div class="hero-sub">Complete all three sections to finish your certification. You must pass each section before moving on.</div>
+</div>
+
+<div class="instruction">
+  <span class="instruction-icon">ℹ</span>
+  <span>All questions are shown on one page per section. Select your answers, then hit Submit at the bottom. Correct answers and explanations will be revealed after submission.</span>
+</div>
+
+<div class="grid">
+
+  <a href="section-1-ghl.html" class="card">
+    <div class="card-section-tag"><span class="section-pill">1</span> Section One</div>
+    <div class="card-icon">⚙️</div>
+    <div class="card-title">GHL Automations</div>
+    <div class="card-desc">Triggers, conditions, actions, workflows, pipeline logic, and the KP Automation Library.</div>
+    <div class="card-footer">
+      <span class="badge">20 Questions</span>
+      <span class="badge badge-pass">Pass: 80%</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+  <a href="section-2-ai-meeting.html" class="card">
+    <div class="card-section-tag"><span class="section-pill">2</span> Section Two</div>
+    <div class="card-icon">🎙️</div>
+    <div class="card-title">AI Meeting Notes + Glossary</div>
+    <div class="card-desc">Supernormal, Fathom, Otter, Fireflies, post-meeting workflows, and essential AI terminology.</div>
+    <div class="card-footer">
+      <span class="badge">20 Questions</span>
+      <span class="badge badge-pass">Pass: 80%</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+  <a href="section-3-situational.html" class="card">
+    <div class="card-section-tag"><span class="section-pill">3</span> Section Three</div>
+    <div class="card-icon">🧠</div>
+    <div class="card-title">Situational Prompting</div>
+    <div class="card-desc">Two real-world scenarios. Demonstrate that you can pick the right tool and sequence for the job.</div>
+    <div class="card-footer">
+      <span class="badge">2 Scenarios</span>
+      <span class="badge badge-warn">Pass: 100%</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  <strong>KeyPlayers HQ</strong> · Real Humans. Powered by AI.<br>VA Academy · AI Training Programme · Day 10
+</footer>
+
+<script>
+const ADMIN_PASS = 'KP2025';
+
+function traineeLogin() {
+  const name   = document.getElementById('t-name').value.trim();
+  const email  = document.getElementById('t-email').value.trim();
+  const role   = document.getElementById('t-role').value.trim();
+  const cohort = document.getElementById('t-cohort').value.trim();
+  const err    = document.getElementById('t-error');
+  if (!name)                        { err.textContent = 'Please enter your full name.'; return; }
+  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email address.'; return; }
+  err.textContent = '';
+  sessionStorage.setItem('kp_trainee', JSON.stringify({ name, email, role, cohort, access: 'trainee', ts: Date.now() }));
+  document.getElementById('login-gate').classList.add('hidden');
+}
+
+function adminLogin() {
+  const pass = document.getElementById('a-pass').value;
+  const err  = document.getElementById('a-error');
+  if (pass !== ADMIN_PASS) { err.textContent = 'Incorrect password. Try again.'; return; }
+  err.textContent = '';
+  sessionStorage.setItem('kp_trainee', JSON.stringify({ name: 'Admin', access: 'admin', ts: Date.now() }));
+  document.getElementById('login-gate').classList.add('hidden');
+  const nav = document.querySelector('.nav-right');
+  if (nav) nav.innerHTML = '<span class="dot" style="background:#f5c518"></span> Admin View';
+}
+
+// On load: check for ?admin URL param or existing session
+(function() {
+  const isAdmin = new URLSearchParams(window.location.search).has('admin');
+  if (isAdmin) {
+    document.getElementById('trainee-panel').classList.add('hidden');
+    document.getElementById('admin-panel').classList.add('show');
+  }
+  const saved = sessionStorage.getItem('kp_trainee');
+  if (saved) {
+    document.getElementById('login-gate').classList.add('hidden');
+    const data = JSON.parse(saved);
+    if (data.access === 'admin') {
+      const nav = document.querySelector('.nav-right');
+      if (nav) nav.innerHTML = '<span class="dot" style="background:#f5c518"></span> Admin View';
+    }
+  }
+})();
+</script>
+</body>
+</html>

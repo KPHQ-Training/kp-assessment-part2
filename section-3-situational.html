@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyPlayers HQ · Section 3: Situational Prompting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#061812;--surface:#0a2016;--card:#0f2a1c;--border:#1a4230;
+  --accent:#3de8a0;--accent-glow:rgba(61,232,160,0.12);
+  --text:#f0f0f0;--muted:#5a8070;--green:#22c55e;--red:#ef4444;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 80px}
+nav{width:100%;background:rgba(6,24,18,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px}
+.nav-left{display:flex;align-items:center;gap:10px}
+.rook{width:30px;height:30px;flex-shrink:0}
+.wordmark{font-weight:800;font-size:14px;letter-spacing:-0.3px;color:#fff}
+.wordmark span{color:var(--accent)}
+.nav-badge{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:99px}
+.nav-right{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+.page-header{text-align:center;padding:36px 16px 20px;max-width:720px;width:100%}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.page-title{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:6px}
+.page-sub{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* Intro callout */
+.intro-callout{width:100%;max-width:720px;padding:0 16px 8px}
+.intro-callout-inner{background:rgba(61,232,160,0.06);border:1px solid rgba(61,232,160,0.2);border-radius:12px;padding:16px 20px;font-size:13px;color:#a0c8b0;line-height:1.65}
+.intro-callout-inner strong{color:var(--accent);display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+
+.score-banner{display:none;width:100%;max-width:720px;margin:0 16px 24px;padding:22px 24px;border-radius:14px;text-align:center}
+.score-banner.perfect{background:#0c2318;border:1px solid rgba(34,197,94,0.4)}
+.score-banner.good{background:#1a2a10;border:1px solid rgba(61,232,160,0.3)}
+.score-banner.review{background:#1e0f0f;border:1px solid rgba(239,68,68,0.3)}
+.score-big{font-size:40px;font-weight:800;line-height:1}
+.score-banner.perfect .score-big{color:var(--green)}
+.score-banner.good .score-big{color:var(--accent)}
+.score-banner.review .score-big{color:var(--red)}
+.score-label{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;color:var(--muted)}
+.score-msg{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.6;max-width:480px;margin-left:auto;margin-right:auto}
+
+.q-list{width:100%;max-width:720px;padding:16px 16px 0;display:flex;flex-direction:column;gap:20px}
+
+/* Scenario card — bigger, more prominent */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:0;overflow:hidden;transition:border-color 0.2s}
+.q-card.answered-correct{border-color:rgba(34,197,94,0.4)}
+.q-card.answered-wrong{border-color:rgba(239,68,68,0.3)}
+
+.scenario-header{background:rgba(61,232,160,0.06);border-bottom:1px solid var(--border);padding:14px 22px;display:flex;align-items:center;gap:10px}
+.scenario-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.scenario-num{width:26px;height:26px;border-radius:50%;background:rgba(61,232,160,0.15);border:1px solid rgba(61,232,160,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0}
+
+.scenario-body{padding:22px}
+
+/* Scenario context box */
+.context-box{background:rgba(0,0,0,0.25);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#a0c8b0;line-height:1.7}
+.context-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+
+.q-text{font-size:15px;font-weight:700;color:#fff;line-height:1.65;margin-bottom:18px;letter-spacing:-0.1px}
+
+.options{display:flex;flex-direction:column;gap:10px}
+.option{background:#0a1e14;border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.15s,background 0.15s;font-size:13.5px;color:#c0d8c8;text-align:left;width:100%;font-family:'Inter',sans-serif;line-height:1.55}
+.option:hover:not(.locked){border-color:var(--accent);background:var(--accent-glow)}
+.option.selected{border-color:var(--accent);background:var(--accent-glow)}
+.option.correct{border-color:var(--green);background:#0c2318;color:#fff}
+.option.wrong{border-color:var(--red);background:#1e0f0f;color:#fff}
+.option.locked{cursor:default}
+.opt-letter{font-weight:700;font-size:12px;color:var(--accent);min-width:18px;flex-shrink:0;margin-top:2px;letter-spacing:0.5px}
+.option.correct .opt-letter{color:var(--green)}
+.option.wrong .opt-letter{color:var(--red)}
+
+.q-feedback{display:none;margin-top:14px;padding:14px 16px;border-radius:10px;font-size:13.5px;line-height:1.7}
+.q-feedback.show-correct{display:block;background:#0c2318;border:1px solid rgba(34,197,94,0.2);color:#86efac}
+.q-feedback.show-wrong{display:block;background:#1e0f0f;border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
+.fb-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+
+/* Complete badge */
+.complete-badge{display:inline-block;margin-top:14px;background:rgba(61,232,160,0.1);border:1px solid rgba(61,232,160,0.3);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:0.5px}
+
+.submit-wrap{width:100%;max-width:720px;padding:28px 16px 0}
+.submit-btn{width:100%;background:var(--accent);color:#061812;border:none;padding:15px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.15s,transform 0.1s}
+.submit-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:0.4;cursor:default;transform:none}
+.submit-note{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+.back-wrap{width:100%;max-width:720px;padding:20px 16px 0;text-align:center}
+.back-link{display:inline-block;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:9px 20px;border-radius:9px;transition:border-color 0.15s,color 0.15s}
+.back-link:hover{border-color:var(--accent);color:var(--accent)}
+footer{margin-top:48px;text-align:center;font-size:11px;color:var(--border)}
+footer strong{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <span class="wordmark">Key<span>Players</span> HQ</span>
+    <span class="nav-badge">VA Academy</span>
+    <span class="nav-badge" style="color:#f5c518;border-color:rgba(245,197,24,0.3);background:rgba(245,197,24,0.06);">Internal Use Only</span>
+  </div>
+  <div class="nav-right"><span class="dot"></span> Day 10 · Assessment</div>
+</nav>
+
+<div class="page-header">
+  <div class="eyebrow">Section 3 of 3 · Final Section</div>
+  <div class="page-title">Situational Prompting</div>
+  <div class="page-sub">2 real-world scenarios &nbsp;·&nbsp; Pass mark 100% &nbsp;·&nbsp; Covers Days 7–8 applied workflows</div>
+</div>
+
+<div class="intro-callout">
+  <div class="intro-callout-inner">
+    <strong>↓ How to approach this section</strong>
+    These are real situations you'll face on the job. There's no trick — pick the answer that reflects what you'd actually do using the tools and workflows covered in training. Think before you click.
+  </div>
+</div>
+
+<div class="score-banner" id="scoreBanner">
+  <div class="score-big" id="scoreNum">—</div>
+  <div class="score-label" id="scoreLabel">—</div>
+  <div class="score-msg" id="scoreMsg">—</div>
+  <div id="completeBadge"></div>
+</div>
+
+<div class="q-list" id="qList"></div>
+
+<div class="submit-wrap">
+  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit &amp; Complete Assessment →</button>
+  <div class="submit-note">Answer both scenarios before submitting.</div>
+</div>
+<div class="back-wrap">
+  <a id="backLink" href="index.html" class="back-link" style="display:none">← Back to Assessment Hub</a>
+</div>
+
+<footer>
+  <strong>KeyPlayers HQ</strong> · Real Humans. Powered by AI.<br>VA Academy · AI Training Programme · Day 10
+</footer>
+
+<script>
+const letters = ['A','B','C','D'];
+
+const questions = [
+  {
+    scenario: "Scenario 1 — GHL Automation",
+    context: "Your client just launched a new landing page. The goal: whenever someone fills out the lead form, they should receive a 'Thank You' SMS within 2 minutes and be automatically added to the 'New Enquiry' pipeline stage. Your client runs GHL.",
+    q: "What do you build?",
+    opts: [
+      "A GHL campaign that sends bulk SMS to all new contacts every day",
+      "A GHL workflow: Trigger (form submitted) → Wait 2 min → Action (send SMS) → Action (move to 'New Enquiry' pipeline stage)",
+      "Manually check for new form submissions each morning and send the SMS yourself",
+      "Set a recurring calendar reminder to check GHL every 2 minutes during business hours"
+    ],
+    ans: 1,
+    exp: "This is a Trigger → Wait → Action → Action workflow. Form submission is the trigger, a 2-minute wait controls timing, then two actions execute: SMS send and pipeline move. Campaigns are for scheduled broadcasts — not event-triggered sequences. Manual checking defeats the entire purpose of automation."
+  },
+  {
+    scenario: "Scenario 2 — AI Meeting + Claude Workflow",
+    context: "You just finished a 90-minute onboarding call with a new client. Supernormal recorded the entire meeting. Your CEO needs a clean summary with: the top 3 priorities discussed, all decisions made, and next steps — by end of day.",
+    q: "What is the fastest and most accurate approach?",
+    opts: [
+      "Rewatch the 90-minute recording and manually write the summary yourself",
+      "Ask Supernormal to auto-email the summary directly to your CEO without reviewing it first",
+      "Open the Supernormal transcript in Claude, prompt it to extract the top 3 priorities, decisions, and next steps in a formatted document — then review and send",
+      "Use Perplexity to research the client's business priorities online and compile a summary from public sources"
+    ],
+    ans: 2,
+    exp: "This is the Day 8 Meeting AI + Claude Combo workflow in action. Supernormal captures and transcribes → Claude structures the output based on your specific prompt → you review before sending. Never send AI-generated summaries without reviewing first. Perplexity would give you public info — not what was actually said in the meeting."
+  }
+];
+
+const qList = document.getElementById('qList');
+const userAnswers = new Array(questions.length).fill(null);
+
+questions.forEach((q, qi) => {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = `q${qi}`;
+
+  let html = `
+    <div class="scenario-header">
+      <div class="scenario-num">${qi+1}</div>
+      <span class="scenario-tag">${q.scenario}</span>
+    </div>
+    <div class="scenario-body">
+      <div class="context-box">
+        <div class="context-label">Situation</div>
+        ${q.context}
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts${qi}">`;
+
+  q.opts.forEach((opt, oi) => {
+    html += `<button class="option" id="opt${qi}_${oi}" onclick="selectAnswer(${qi},${oi})">`+
+            `<span class="opt-letter">${letters[oi]}</span><span>${opt}</span></button>`;
+  });
+
+  html += `</div>
+    <div class="q-feedback" id="fb${qi}">
+      <div class="fb-label" id="fbl${qi}"></div>
+      <div id="fbb${qi}"></div>
+    </div>
+  </div>`;
+
+  card.innerHTML = html;
+  qList.appendChild(card);
+});
+
+function selectAnswer(qi, oi) {
+  if (document.getElementById(`q${qi}`).classList.contains('submitted')) return;
+  userAnswers[qi] = oi;
+  document.querySelectorAll(`#opts${qi} .option`).forEach(o => o.classList.remove('selected'));
+  document.getElementById(`opt${qi}_${oi}`).classList.add('selected');
+  updateSubmitState();
+}
+
+function updateSubmitState() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  document.getElementById('submitBtn').disabled = answered < questions.length;
+  document.querySelector('.submit-note').textContent =
+    answered === questions.length ? 'Both scenarios answered — ready to submit.' : `${answered} of ${questions.length} scenarios answered.`;
+}
+
+function submitQuiz() {
+  let score = 0;
+  questions.forEach((q, qi) => {
+    const card = document.getElementById(`q${qi}`);
+    card.classList.add('submitted');
+    const ua = userAnswers[qi];
+    const fb = document.getElementById(`fb${qi}`);
+    const fbl = document.getElementById(`fbl${qi}`);
+    const fbb = document.getElementById(`fbb${qi}`);
+    document.querySelectorAll(`#opts${qi} .option`).forEach(o => { o.classList.add('locked'); o.classList.remove('selected'); });
+
+    if (ua === q.ans) {
+      score++;
+      document.getElementById(`opt${qi}_${ua}`).classList.add('correct');
+      card.classList.add('answered-correct');
+      fb.className = 'q-feedback show-correct';
+      fbl.textContent = '✓ Correct';
+      fbb.textContent = q.exp;
+    } else {
+      document.getElementById(`opt${qi}_${ua}`).classList.add('wrong');
+      document.getElementById(`opt${qi}_${q.ans}`).classList.add('correct');
+      card.classList.add('answered-wrong');
+      fb.className = 'q-feedback show-wrong';
+      fbl.textContent = '✗ Incorrect — Correct answer: ' + letters[q.ans];
+      fbb.textContent = q.exp;
+    }
+  });
+
+  const banner = document.getElementById('scoreBanner');
+  const badge = document.getElementById('completeBadge');
+  document.getElementById('scoreNum').textContent = `${score} / 2`;
+
+  if (score === 2) {
+    banner.className = 'score-banner perfect';
+    document.getElementById('scoreLabel').textContent = '✓ PERFECT — SECTION COMPLETE';
+    document.getElementById('scoreMsg').textContent = 'You nailed both scenarios. You know how to pick the right tool for the right job. Assessment complete.';
+    badge.innerHTML = '<div class="complete-badge">✓ All 3 Sections Complete — Day 10 Assessment Done</div>';
+  } else if (score === 1) {
+    banner.className = 'score-banner good';
+    document.getElementById('scoreLabel').textContent = 'Almost There';
+    document.getElementById('scoreMsg').textContent = 'You got one right. Review the missed scenario below and make sure you understand the reasoning — the "why" matters as much as the answer.';
+  } else {
+    banner.className = 'score-banner review';
+    document.getElementById('scoreLabel').textContent = 'Review Needed';
+    document.getElementById('scoreMsg').textContent = 'Revisit Days 7 and 8 — focus on the GHL workflow structure and the Meeting AI + Claude combo. These are core daily workflows.';
+  }
+
+  banner.style.display = 'block';
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('backLink').style.display = 'inline-block';
+  document.querySelector('.submit-note').style.display = 'none';
+  banner.scrollIntoView({behavior:'smooth', block:'center'});
+  window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
+}
+
+updateSubmitState();
+</script>
+</body>
+</html>
